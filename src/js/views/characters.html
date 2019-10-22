@@ -1,10 +1,35 @@
-<!--
- Copyright (c) 2014, 2019, Oracle and/or its affiliates.
- The Universal Permissive License (UPL), Version 1.0
- -->
-<div class="oj-hybrid-padding">
-  <h1>Star Wars Characters</h1>
-  <div>
-      Star Wars Characters go here
-  </div>
+<div id="componentDemoContent" style="width: 1px; min-width: 100%;">
+    <oj-list-view id="listview" aria-label="list using array" 
+          data="[[dataProvider]]" 
+          selection-mode="single">
+      <template slot="itemTemplate" data-oj-as="item">
+          <div class="oj-flex">
+           <!--   <div class="oj-flex-item" style="max-width:70px;margin:auto;">
+                  <img data-bind="attr: {src: '../images/listView/'+ item.data.name +'.png', alt: item.data.name}"/>
+              </div> -->
+              <div class="oj-flex-item" style="width:75%">
+                  <div class="oj-lg-10 oj-md-10 oj-sm-12">
+                      <div class="oj-flex row">
+                          <div class="oj-lg-12">
+                              <span class="header" style='font-weight: bold;'><oj-bind-text value="[[item.data.name]]"></oj-bind-text></span>
+                          </div>
+                      </div>
+                      <div class="oj-flex row">
+                          <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                              <span class="data"><b>Gender: </b><span><oj-bind-text value="[[item.data.gender]]"></oj-bind-text></span></span>
+                          </div>
+                          <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                              <span class="data"><b>Height: </b><span><oj-bind-text value="[[item.data.height]]"></oj-bind-text></span></span>
+                          </div>
+                          <div class="oj-lg-4 oj-md-4 oj-sm-12">
+                              <span class="data"><b>Homeworld: </b><span><oj-bind-text value="[[item.data.homeworld]]"></oj-bind-text></span></span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </template>
+  </oj-list-view>
+
+  
 </div>

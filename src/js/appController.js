@@ -37,7 +37,7 @@ define(['knockout', 'ojs/ojmodule-element-utils', 'ojs/ojresponsiveutils', 'ojs/
           ]);
           masterPromise.then(
             function(values){
-              self.moduleConfig({'view':values[0],'viewModel':values[1]});
+              self.moduleConfig({'view':values[0], 'viewModel':values[1]});
             }
           );
         });
@@ -46,7 +46,7 @@ define(['knockout', 'ojs/ojmodule-element-utils', 'ojs/ojresponsiveutils', 'ojs/
       // Navigation setup
       var navData = [
       {name: 'Star Wars Characters', id: 'characters',
-       iconClass: 'oj-navigationlist-item-icon demo-icon-font-24 demo-chart-icon-24'}
+        iconClass: 'oj-navigationlist-item-icon demo-icon-font-24 demo-chart-icon-24'}
       ];
       self.navDataProvider = new ArrayDataProvider(navData, {keyAttributes: 'id'});
 
