@@ -5,15 +5,16 @@
  */
 'use strict';
 
-define(['knockout', 'ojs/ojbootstrap', 'ojs/ojcollectiondataprovider', 'ojs/ojmodel', 'ojs/ojknockout', 'ojs/ojlistview'],
-  function(ko, Bootstrap, CollectionDataProvider, model)
+define(['knockout', 'ojs/ojbootstrap', 'ojs/ojcollectiondataprovider', 'ojs/ojmodel', 'ojs/ojarraydataprovider', 'ojs/ojknockout', 'ojs/ojlistview'],
+  function(ko, Bootstrap, CollectionDataProvider, model, ArrayDataProvider)
   {
     const restAPI = 'https://swapi.co/api';
 
     function viewModel()
     {
       const self = this;
-      
+      const characterArray = ko.observableArray([]);
+
       const CharacterModel = model.Model.extend({
         urlRoot: `${restAPI}/people/`
       });
@@ -21,17 +22,30 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojcollectiondataprovider', 'ojs/ojmo
         url: `${restAPI}/people/`,
         model: CharacterModel,
         parse: data => {
-          return data.results.map(row => ({
-            name: row.name,
-            height: `${row.height} cm`,
-            gender: row.gender,
-            homeworld: row.homeworld
-          }));
+          return data.results.map(async (row) => {
+            const planetId = row.homeworld.split('/');
+            const planet = await getPlanet(planetId[5]);
+            characterArray.push({
+              name: row.name,
+              height: `${row.height} cm`,
+              gender: row.gender,
+              homeworld: planet.name
+            });
+          });
         }
       });
 
+      async function getPlanet(id) 
+      {
+        const PlanetCollection = model.Collection.extend({
+          url: `${restAPI}/planets/${id}/`,
+        });
+        return await (new PlanetCollection()).fetch();
+      }
+      
       const characterData = new CharacterCollection();
-      self.dataProvider = new CollectionDataProvider(characterData);
+      characterData.fetch();
+      self.dataProvider = new ArrayDataProvider(characterArray);
     }
     return new viewModel();
   }
