@@ -5,8 +5,8 @@
  */
 'use strict';
 
-define(['knockout', 'ojs/ojbootstrap', 'ojs/ojcollectiondataprovider', 'ojs/ojmodel', 'ojs/ojarraydataprovider', 'ojs/ojknockout', 'ojs/ojlistview'],
-  function(ko, Bootstrap, CollectionDataProvider, model, ArrayDataProvider)
+define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider', 'ojs/ojknockout', 'ojs/ojlistview'],
+  function(ko, Bootstrap, model, ArrayDataProvider)
   {
     const restAPI = 'https://swapi.co/api';
 
