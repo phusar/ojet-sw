@@ -14,6 +14,7 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider',
     {
       const self = this;
       const characterArray = ko.observableArray([]);
+      const planetCache = {};
 
       const CharacterModel = model.Model.extend({
         urlRoot: `${restAPI}/people/`
@@ -37,10 +38,14 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider',
 
       async function getPlanet(id) 
       {
+        if (planetCache[id]) {
+          return await planetCache[id];
+        }
         const PlanetCollection = model.Collection.extend({
           url: `${restAPI}/planets/${id}/`,
         });
-        return await (new PlanetCollection()).fetch();
+        planetCache[id] = (new PlanetCollection()).fetch();
+        return await planetCache[id];
       }
       
       const characterData = new CharacterCollection();
