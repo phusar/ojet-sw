@@ -23,7 +23,7 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider',
         url: `${restAPI}/people/`,
         model: CharacterModel,
         parse: data => {
-          return data.results.map(async (row) => {
+          data.results.map(async (row) => {
             const planetId = row.homeworld.split('/');
             const planet = await getPlanet(planetId[5]);
             characterArray.push({
@@ -42,7 +42,7 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider',
           return await planetCache[id];
         }
         const PlanetCollection = model.Collection.extend({
-          url: `${restAPI}/planets/${id}/`,
+          url: `${restAPI}/planets/${id}/`
         });
         planetCache[id] = (new PlanetCollection()).fetch();
         return await planetCache[id];
