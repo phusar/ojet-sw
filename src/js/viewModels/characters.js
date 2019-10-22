@@ -5,33 +5,34 @@
  */
 'use strict';
 
-define(['knockout', 'ojs/ojbootstrap', 'ojs/ojarraydataprovider', 'ojs/ojknockout', 'ojs/ojlistview'],
-  function(ko, Bootstrap, ArrayDataProvider)
+define(['knockout', 'ojs/ojbootstrap', 'ojs/ojcollectiondataprovider', 'ojs/ojmodel', 'ojs/ojknockout', 'ojs/ojlistview'],
+  function(ko, Bootstrap, CollectionDataProvider, model)
   {
-      function viewModel()
-      {
-        const self = this;
+    const restAPI = 'https://swapi.co/api';
 
-        /* self.connected = () => {
-          const data = [{name: 'Lea'}];
-          self.dataProvider = new ArrayDataProvider(data, 
-            { keys: data.map(function(value) {
-                  return value.name;
-              })}); 
-        } */
+    function viewModel()
+    {
+      const self = this;
+      
+      const CharacterModel = model.Model.extend({
+        urlRoot: `${restAPI}/people/`
+      });
+      const CharacterCollection = model.Collection.extend({
+        url: `${restAPI}/people/`,
+        model: CharacterModel,
+        parse: data => {
+          return data.results.map(row => ({
+            name: row.name,
+            height: `${row.height} cm`,
+            gender: row.gender,
+            homeworld: row.homeworld
+          }));
+        }
+      });
 
-          
-        const data = [
-          {name: 'Luke', gender: 'male', height: '175 cm', homeworld: 'Tatooine'},
-          {name: 'Obi', gender: 'male', height: '180 cm', homeworld: 'Force'},
-          {name: 'Chewwie', gender: 'male', height: '210 cm', homeworld: 'Kashyyk'},
-          {name: 'Han', gender: 'male', height: '165 cm', homeworld: '??'},
-          {name: 'Jarjar', gender: '???', height: '160 cm', homeworld: 'Naboo'}
-        ];
-        self.dataProvider = new ArrayDataProvider(data, 
-          { keys: data.map(function(value) {
-                return value.name;
-            })}); 
-      }
-      return viewModel;
-  });
+      const characterData = new CharacterCollection();
+      self.dataProvider = new CollectionDataProvider(characterData);
+    }
+    return new viewModel();
+  }
+);
