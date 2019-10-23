@@ -26,15 +26,18 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider',
         url: peopleApiUrl,
         model: CharacterModel,
         parse: data => {
-          data.results.map(async (row) => {
+          const characterPromise = data.results.map(async (row) => {
             const planetId = row.homeworld.split('/');
             const planet = await getPlanet(planetId[5]);
-              characterArray.push({
+            return {
               name: row.name,
               height: `${row.height} cm`,
               gender: row.gender,
               homeworld: planet.name
-            });
+            };
+          });
+          Promise.all(characterPromise).then(characters => {
+            characterArray(characters);
           });
         }
       });
