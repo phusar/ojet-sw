@@ -26,6 +26,7 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider',
         url: peopleApiUrl,
         model: CharacterModel,
         parse: data => {
+          characterArray([]);
           const characterPromise = data.results.map(async (row) => {
             const planetId = row.homeworld.split('/');
             const planet = await getPlanet(planetId[5]);
@@ -57,15 +58,19 @@ define(['knockout', 'ojs/ojbootstrap', 'ojs/ojmodel', 'ojs/ojarraydataprovider',
       const characterData = new CharacterCollection();
       characterData.fetch();
       self.searchValue.subscribe((value) => {
-        if (!value || value.length === 0) {
-          characterData.url = peopleApiUrl;
-        } else {
-          characterData.url = `${peopleApiUrl}?search=${value}`;
+        let timeout;
+        if (timeout) {
+          timeout = undefined;
         }
-        // Reset the observable array, abort previous requests to eliminate race conditions and fetch new data
-        characterArray([]);
-        characterData.abort();
-        characterData.fetch();        
+        // Abort is throwing uncaught Promise errors. With a little bit of throttling, we may not need to abort at all.
+        setTimeout(() => {
+          if (!value || value.length === 0) {
+            characterData.url = peopleApiUrl;
+          } else {
+            characterData.url = `${peopleApiUrl}?search=${value}`;
+          }
+          characterData.fetch();   
+        }, 100);
       })
       self.dataProvider = new ArrayDataProvider(characterArray);
     }
